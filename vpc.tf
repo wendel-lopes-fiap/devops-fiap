@@ -12,26 +12,26 @@ resource "aws_subnet" "public_subnet_1a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1c"
+  availability_zone       = "us-east-2a"
 }
 
 resource "aws_subnet" "public_subnet_1b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1d"
+  availability_zone       = "us-east-2b"
 }
 
 resource "aws_subnet" "private_subnet_1a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1c"
+  availability_zone = "us-east-2a"
 }
 
 resource "aws_subnet" "private_subnet_1b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.4.0/24"
-  availability_zone = "us-east-1d"
+  availability_zone = "us-east-2b"
 }
 
 resource "aws_route_table" "public_route_table" {
