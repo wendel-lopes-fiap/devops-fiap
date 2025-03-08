@@ -49,13 +49,13 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 140023394758.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 140023394758.dkr.ecr.us-east-2.amazonaws.com
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t teddy-application-repository:$GITHUB_SHA .
-          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
-          docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
+          docker build -t teddy-application-repository .
+          docker tag teddy-application-repository:latest 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
+          docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
 
       - name: Clean up old images from Amazon ECR
         run: |
