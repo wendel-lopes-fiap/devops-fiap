@@ -57,3 +57,32 @@ jobs:
           docker tag teddy-application-repository:latest 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
           docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
 
+      - name: Clean up old images from Amazon ECR
+        run: |
+          repository="teddy-application-repository"
+          keep_last=1
+          images=$(aws ecr describe-images --repository-name $repository --query 'sort_by(imageDetails,& imagePushedAt)[].imageDigest' --output text)
+          images_to_delete=$(echo $images | tr ' ' '\n' | tail -n +$(($keep_last+1)))
+          for digest in $images_to_delete; do
+            aws ecr batch-delete-image --repository-name $repository --image-ids imageDigest=$digest
+            echo "Deleted image with digest $digest"
+          done
+
+  update-ecs-service:
+    needs: build-and-push-docker
+    name: Update ECS Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+ 
+      - name: Update ECS Service
+        run: |
+          aws ecs update-service --cluster ecs-cluster-mvp --service my-application-service --force-new-deployment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
