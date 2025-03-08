@@ -27,11 +27,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+     # - name: Terraform Destroy
+     #   run: terraform destroy -auto-approve
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+     # - name: Terraform Apply
+     #   run: terraform apply -auto-approve
 
   build-and-push-docker:
     needs: deploy
@@ -54,7 +54,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         run: |
           docker build -t teddy-application-repository:$GITHUB_SHA .
-          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
+          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-1.amazonaws.com/teddy-application-repository:$GITHUB_SHA
           docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
 
       - name: Clean up old images from Amazon ECR
