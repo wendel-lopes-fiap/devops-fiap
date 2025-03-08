@@ -7,12 +7,12 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "s3-wendel-save-terraform-states"
+    bucket = "wendel-save-terraform-states"
     key    = "dev.tfstate"
-    region = "us-east-2"
+    region = "us-east-1"
   }
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
 }

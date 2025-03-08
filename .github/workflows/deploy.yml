@@ -1,4 +1,4 @@
-name: Trabalho de DevOps
+name: projeto automatizado completo etapa 3 cicd deploy aplicacao
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+          aws-region: us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -27,11 +27,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      #- name: Terraform Destroy
-      #  run: terraform destroy -auto-approve
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
 
-      #- name: Terraform Apply
-      #  run: terraform apply -auto-approve
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
 
   build-and-push-docker:
     needs: deploy
@@ -45,17 +45,17 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+          aws-region: us-east-1
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 140023394758.dkr.ecr.us-east-2.amazonaws.com
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 140023394758.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
           docker build -t teddy-application-repository:$GITHUB_SHA .
-          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
-          docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
+          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-1.amazonaws.com/teddy-application-repository:$GITHUB_SHA
+          docker push 140023394758.dkr.ecr.us-east-1.amazonaws.com/teddy-application-repository:$GITHUB_SHA
 
       - name: Clean up old images from Amazon ECR
         run: |
@@ -78,8 +78,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
- 
+          aws-region: us-east-1
+
       - name: Update ECS Service
         run: |
           aws ecs update-service --cluster ecs-cluster-mvp --service my-application-service --force-new-deployment

@@ -8,3 +8,4 @@ output "ecr_repository_url" {
 }
 
 
+
