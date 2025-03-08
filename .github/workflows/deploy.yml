@@ -27,11 +27,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+      #- name: Terraform Destroy
+      #  run: terraform destroy -auto-approve
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      #- name: Terraform Apply
+      #  run: terraform apply -auto-approve
 
   build-and-push-docker:
     needs: deploy
@@ -45,7 +45,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-2
 
       - name: Login to Amazon ECR
         run: |
@@ -53,9 +53,9 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t teddy-application-repository .
-          docker tag teddy-application-repository:latest 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
-          docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:latest
+          docker build -t teddy-application-repository:$GITHUB_SHA .
+          docker tag teddy-application-repository:$GITHUB_SHA 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
+          docker push 140023394758.dkr.ecr.us-east-2.amazonaws.com/teddy-application-repository:$GITHUB_SHA
 
       - name: Clean up old images from Amazon ECR
         run: |
@@ -78,7 +78,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-2
  
       - name: Update ECS Service
         run: |
