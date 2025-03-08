@@ -1,0 +1,10 @@
+*.terraform
+**/.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+*.tfstate.*.bkp
+stage/**/*providers.tf
+.terraform_cache
+*.terraform.lock.hcl
+
+**/.aws/
