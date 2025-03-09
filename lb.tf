@@ -16,7 +16,7 @@ resource "aws_lb_target_group" "my_target_group" {
     healthy_threshold   = 5
     unhealthy_threshold = 2
   }
-
+ 
   tags = {
     Name = "My Target Group"
   }
